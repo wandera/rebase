@@ -29,6 +29,9 @@ BASE_BRANCH=$(echo "$pr_resp" | jq -r .base.ref)
 
 USER_LOGIN=$(jq -r ".comment.user.login" "$GITHUB_EVENT_PATH")
 
+COMMAND=$(jq -r ".comment.body" "$GITHUB_EVENT_PATH")
+echo "GH command is '$COMMAND'"
+
 user_resp=$(curl -X GET -s -H "${AUTH_HEADER}" -H "${API_HEADER}" \
             "${URI}/users/${USER_LOGIN}")
 
