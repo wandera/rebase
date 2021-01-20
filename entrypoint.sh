@@ -21,6 +21,18 @@ URI=https://api.github.com
 API_HEADER="Accept: application/vnd.github.v3+json"
 AUTH_HEADER="Authorization: token $GITHUB_TOKEN"
 
+catch() {
+  if [ "$1" != "0" ]; then
+    echo "Sending error message to PR."
+    RUN_URL="$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID"
+    MESSAGE="Automatic Rebase/Autosquash action failed - details are [here]($RUN_URL)."
+    curl -s -H "${AUTH_HEADER}" -X POST -d "{\"body\": \"$MESSAGE\"}" \
+      "$URI/repos/$GITHUB_REPOSITORY/issues/$PR_NUMBER/comments"
+  fi
+}
+
+trap 'catch $?' EXIT
+
 pr_resp=$(curl -X GET -s -H "${AUTH_HEADER}" -H "${API_HEADER}" \
   "${URI}/repos/$GITHUB_REPOSITORY/pulls/$PR_NUMBER")
 
