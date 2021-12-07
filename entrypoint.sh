@@ -94,16 +94,16 @@ git fetch fork $HEAD_BRANCH
 if [[ $COMMAND == "/rebase+" ]]; then
   # do the rebase + autosquash
   git checkout -b $HEAD_BRANCH fork/$HEAD_BRANCH
-  GIT_SEQUENCE_EDITOR=: git rebase -i --autosquash origin/$BASE_BRANCH
+  GIT_SEQUENCE_EDITOR=: git rebase -i --autosquash --empty=drop origin/$BASE_BRANCH
 elif [[ $COMMAND == "/autosquash" ]]; then
   # do the autosquash
   git checkout -b $HEAD_BRANCH fork/$HEAD_BRANCH
   ANCESTOR=$(git merge-base origin/$BASE_BRANCH fork/$HEAD_BRANCH)
-  GIT_SEQUENCE_EDITOR=: git rebase -i --autosquash $ANCESTOR
+  GIT_SEQUENCE_EDITOR=: git rebase -i --autosquash --empty=drop $ANCESTOR
 else
   # do the rebase
   git checkout -b $HEAD_BRANCH fork/$HEAD_BRANCH
-  git rebase origin/$BASE_BRANCH
+  git rebase --empty=drop origin/$BASE_BRANCH
 fi
 # push back
 git push --force-with-lease fork $HEAD_BRANCH
