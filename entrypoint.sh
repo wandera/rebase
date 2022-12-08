@@ -79,8 +79,10 @@ USER_TOKEN=${USER_LOGIN//-/_}_TOKEN
 UNTRIMMED_COMMITTER_TOKEN=${!USER_TOKEN:-$GITHUB_TOKEN}
 COMMITTER_TOKEN="$(echo -e "${UNTRIMMED_COMMITTER_TOKEN}" | tr -d '[:space:]')"
 
-#workaround for CVE-2022-24765 until git 2.35.2 is in APK
-git config --global --add safe.directory /github/workspace
+# this is needed because the owner of the directory with git repo is different to the one in docker container
+# it is not a security issue because the github runners are not shared
+# it might be resolved in https://github.com/actions/runner/issues/2033
+git config --global --add safe.directory "${GITHUB_WORKSPACE}"
 
 git remote set-url origin https://x-access-token:$COMMITTER_TOKEN@github.com/$GITHUB_REPOSITORY.git
 git config --global user.email "$USER_EMAIL"
