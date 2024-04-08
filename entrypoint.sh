@@ -25,7 +25,7 @@ catch() {
   if [ "$1" != "0" ]; then
     echo "Sending error message to PR."
     RUN_URL="$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID"
-    MESSAGE="Automatic Rebase/Autosquash action failed - details are [here]($RUN_URL)."
+    MESSAGE="Automatic Rebase action failed - details are [here]($RUN_URL)."
     curl -s -H "${AUTH_HEADER}" -X POST -d "{\"body\": \"$MESSAGE\"}" \
       "$URI/repos/$GITHUB_REPOSITORY/issues/$PR_NUMBER/comments"
   fi
